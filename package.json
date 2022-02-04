@@ -4,6 +4,7 @@
   "description": "",
   "license": "",
   "scripts": {
+    "prebuild": "rm -rf build && npm run build:css",
     "build": "cross-env NODE_ENV=production remix build",
     "build:css": "tailwindcss --output ./app/styles/tailwind.css --config ./config/tailwind.js --minify",
     "dev": "cross-env NODE_ENV=development run-p dev:*",
