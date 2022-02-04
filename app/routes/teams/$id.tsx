@@ -83,6 +83,11 @@ export default function NewTeam() {
         >
           Search
         </button>
+        {geocodeResults && geocodeResults.length > 0 ?
+        <ul>
+            {geocodeResults.map((res: any) => <li>{res.name}, {res.state || res.country}</li>)}
+        </ul>
+        : null}
       </Form>
 
       <Form method="post">
