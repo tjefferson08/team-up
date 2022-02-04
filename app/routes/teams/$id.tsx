@@ -35,7 +35,6 @@ export const loader: LoaderFunction = async ({ context, params, request }) => {
     ).json()) as any[];
   }
 
-  console.log(kv, team, members);
   if (team) {
     return { geocodeResults, team, members };
   } else {
@@ -51,10 +50,14 @@ export const action: ActionFunction = async ({ context, request, params }) => {
   const body = await request.formData();
 
   const kv = kvStorageFor(context.env)(`team::member::${params.id}`);
+  const geocodeResult = body.get("member_geocode_result");
+  if (!geocodeResult) {
+    return { error: "A member must have a location" };
+  }
+  const geo = JSON.parse(geocodeResult);
   const id = await kv.create({
     name: body.get("member_name"),
-    latitude: body.get("member_latitude"),
-    longitude: body.get("member_longitude"),
+    geo,
   });
 
   return id;
@@ -70,32 +73,74 @@ export default function NewTeam() {
   const { geocodeResults, team, members } = useLoaderData();
 
   return (
-    <div>
-      <pre>{JSON.stringify(team, null, 2)}</pre>
-      <pre>{JSON.stringify(members, null, 2)}</pre>
-      <pre>{JSON.stringify(geocodeResults, null, 2)}</pre>
-
-      <Form method="get">
-        <Input type="text" name="member_city" required />
-        <button
-          className="w-fit rounded-md bg-indigo-500 p-4 text-xl font-bold text-white"
-          type="submit"
-        >
-          Search
-        </button>
-        {geocodeResults && geocodeResults.length > 0 ?
+    <div className="text-lg">
+      <div>
+        <span className="mr-2 font-bold">Team:</span>
+        <span>{team.name}</span>
+      </div>
+      <div>
+        <span className="mr-2 font-bold">Members:</span>
         <ul>
-            {geocodeResults.map((res: any) => <li>{res.name}, {res.state || res.country}</li>)}
+          {members.map((m) => (
+            <li key={m.id}>
+              <div className="flex space-x-4">
+                <div> {m.name}</div>
+                {m.geo ? (
+                  <div>
+                    {m.geo.name}, {m.geo.state || m.geo.country}
+                  </div>
+                ) : (
+                  <span className="italic">missing geo</span>
+                )}
+              </div>
+            </li>
+          ))}
         </ul>
-        : null}
-      </Form>
+      </div>
 
-      <Form method="post">
-        <Input type="text" name="member_name" required />
-        <Input type="text" name="member_latitude" required />
-        <Input type="text" name="member_longitude" required />
-        <button type="submit">Add Member</button>
-      </Form>
+      <div className="p-8">
+        <Form method="get">
+          <Input
+            type="text"
+            name="member_city"
+            placeholder="e.g. Denver"
+            required
+          />
+          <button
+            className="w-fit rounded-md bg-indigo-500 p-4 text-xl font-bold text-white"
+            type="submit"
+          >
+            Search
+          </button>
+        </Form>
+      </div>
+
+      <div className="p-8">
+        <Form method="post">
+          <Input
+            type="text"
+            name="member_name"
+            placeholder="e.g. Benny from Birmingham"
+            required
+          />
+
+          {geocodeResults && geocodeResults.length > 0 ? (
+            <select name="member_geocode_result">
+              {geocodeResults.map((res: any) => (
+                <option key={JSON.stringify(res)} value={JSON.stringify(res)}>
+                  {res.name}, {res.state || res.country}
+                </option>
+              ))}
+            </select>
+          ) : null}
+          <button
+            className="w-fit rounded-md bg-indigo-500 p-4 text-xl font-bold text-white"
+            type="submit"
+          >
+            Add Member
+          </button>
+        </Form>
+      </div>
     </div>
   );
 }
