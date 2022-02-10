@@ -1,13 +1,14 @@
 import React from "react";
-import {
-  ActionFunction,
-  Form,
-  Link,
-  LoaderFunction,
-  useFetcher,
-  useLoaderData,
-} from "remix";
+import { Form, Link, useFetcher, useLoaderData } from "remix";
+import type { ActionFunction, LinksFunction, LoaderFunction } from "remix";
 import { kvStorageFor, Member, Team } from "~/db.server";
+
+export const links: LinksFunction = () => [
+  {
+    href: "https://unpkg.com/weather-icons-lite@1.6.1/css/weather-icons-lite.min.css",
+    rel: "stylesheet",
+  },
+];
 
 export const loader: LoaderFunction = async ({ context, params, request }) => {
   if (!params.id) {
@@ -60,6 +61,18 @@ export default function TeamDashboard() {
   );
 }
 
+function WeatherCard({ weather }: { weather: any }) {
+  const iconMap = {
+    clouds: "wi-darksky-cloudy",
+  };
+  return (
+    <div>
+      <i className="wi wi-darksky-cloudy text-[48px]"></i>
+      <span className="">{weather.weather.main.temp}&nbsp;&deg;</span>
+    </div>
+  );
+}
+
 function MemberItem({ member, team }: { member: Member; team: Team }) {
   const fetcher = useFetcher();
   React.useEffect(() => {
@@ -78,7 +91,10 @@ function MemberItem({ member, team }: { member: Member; team: Team }) {
               {member.geo.name}, {member.geo.state || member.geo.country}
             </div>
             {fetcher.data ? (
-              <pre>{JSON.stringify(fetcher.data, null, 2)}</pre>
+              <div>
+                <WeatherCard weather={fetcher.data} />
+                <pre>{JSON.stringify(fetcher.data.weather, null, 2)}</pre>
+              </div>
             ) : null}
           </div>
         ) : (

@@ -17,6 +17,7 @@ export const loader: LoaderFunction = async ({ context, params, request }) => {
   const openWeatherURL = new URL(
     `https://api.openweathermap.org/data/2.5/weather`
   );
+  openWeatherURL.searchParams.set("units", "imperial");
   openWeatherURL.searchParams.set("lat", String(member.geo.lat));
   openWeatherURL.searchParams.set("lon", String(member.geo.lon));
   openWeatherURL.searchParams.set("appid", context.env.OPEN_WEATHER_API_KEY);
