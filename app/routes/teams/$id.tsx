@@ -38,14 +38,15 @@ export default function TeamDashboard() {
         <span className="mr-2 font-bold">Team:</span>
         <span>{team.name}</span>
       </div>
-      <div>
-        <span className="mr-2 font-bold">Members:</span>
+      {members.length > 0 ? (
         <ul className="w-full">
           {members.map((m: Member) => (
             <MemberItem key={m.id} member={m} team={team} />
           ))}
         </ul>
-      </div>
+      ) : (
+        <div className="text-xl">No members yet</div>
+      )}
     </div>
   );
 }
