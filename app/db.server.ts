@@ -10,6 +10,11 @@ export type Member = {
   name: string;
   latitude: number;
   longitude: number;
+  geo?: {
+    name: string; // City name
+    state?: string; // State/province name
+    country: string; // Country name
+  };
 };
 
 export const kvStorageFor = (env: Env) => (ns: string) => {
