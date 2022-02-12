@@ -1,6 +1,7 @@
 import { json, LoaderFunction } from "remix";
 import { kvStorageFor } from "~/db.server";
 
+/* https://openweathermap.org/current#data */
 export const loader: LoaderFunction = async ({ context, params, request }) => {
   if (!params.team_id || !params.member_id) {
     throw new Response("Not found", { status: 404 });

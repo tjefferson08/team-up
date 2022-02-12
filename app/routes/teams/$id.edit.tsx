@@ -76,7 +76,9 @@ export default function NewTeam() {
     <div className="text-lg">
       <div>
         <span className="mr-2 font-bold">Team:</span>
-        <span>{team.name}</span>
+        <Link className="text-underline text-blue-600" to={`/teams/${team.id}`}>
+          {team.name}
+        </Link>
       </div>
       <div>
         <span className="mr-2 font-bold">Members:</span>

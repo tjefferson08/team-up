@@ -33,10 +33,13 @@ export default function TeamDashboard() {
   const { team, members } = data;
 
   return (
-    <div className="conatainer mx-auto max-w-2xl p-8 text-lg">
-      <div>
+    <div className="container mx-auto max-w-2xl p-8 text-lg">
+      <div className="flex space-x-4">
         <span className="mr-2 font-bold">Team:</span>
-        <span>{team.name}</span>
+        <span className="">{team.name}</span>
+        <Link className="text-underline text-blue-600" to="./edit">
+          Edit
+        </Link>
       </div>
       {members.length > 0 ? (
         <ul className="w-full">
@@ -52,6 +55,7 @@ export default function TeamDashboard() {
 }
 
 function weatherIconForMain(main: string) {
+  /* https://github.com/Paul-Reed/weather-icons-lite/blob/master/css_mappings.md */
   const iconMap: { [key: string]: string | undefined } = {
     clouds: "wi-darksky-cloudy",
     clear: "wi-darksky-clear-day",
