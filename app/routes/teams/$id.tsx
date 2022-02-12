@@ -57,11 +57,12 @@ function weatherIconForMain(main: string) {
     clear: "wi-darksky-clear-day",
     rain: "wi-darksky-rain",
     snow: "wi-darksky-snow",
+    thunderstorm: "before:content-['\\f00d']",
   };
 
   const weatherClass = iconMap[main.toLowerCase()];
   return weatherClass ? (
-    <i className={`wi ${weatherClass} text-[48px]`}></i>
+    <i className={`wi text-[48px] ${weatherClass}`}></i>
   ) : (
     <span className="text-[48px]">???</span>
   );
