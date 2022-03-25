@@ -4,18 +4,22 @@ import {
   Meta,
   Outlet,
   Scripts,
-  ScrollRestoration
+  ScrollRestoration,
 } from "remix";
 import type { LinksFunction, MetaFunction } from "remix";
 
 import tailwindCssUrl from "~/styles/tailwind.css";
 
 export let links: LinksFunction = () => {
-    return [{ rel: "stylesheet", href: tailwindCssUrl }];
+  return [{ rel: "stylesheet", href: tailwindCssUrl }];
 };
 
 export const meta: MetaFunction = () => {
-  return { title: "New Remix App" };
+  return {
+    title: "TeamUp",
+    charSet: "utf-8", // <meta charSet="utf-8" />
+    viewport: "width=device-width,initial-scale=1", // <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  };
 };
 
 export default function App() {

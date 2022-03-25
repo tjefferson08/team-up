@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Link, useFetcher, useLoaderData } from "remix";
-import type { ActionFunction, LinksFunction, LoaderFunction } from "remix";
+import type { MetaFunction, LinksFunction, LoaderFunction } from "remix";
 import { kvStorageFor, Member, Team } from "~/db.server";
 
 export const links: LinksFunction = () => [
@@ -9,6 +9,12 @@ export const links: LinksFunction = () => [
     rel: "stylesheet",
   },
 ];
+
+export const meta: MetaFunction = ({ data }) => {
+  return {
+    title: `TeamUp: ${data.team.name}`,
+  };
+};
 
 export const loader: LoaderFunction = async ({ context, params }) => {
   if (!params.id) {
@@ -61,9 +67,9 @@ function weatherIconForMain(main: string) {
     clear: "wi-darksky-clear-day",
     rain: "wi-darksky-rain",
     snow: "wi-darksky-snow",
-    thunderstorm: "before:content-['\\ff01e']",
-    mist: "before:content-['\\f014']",
-    fog: "before:content-['\\f014']",
+    thunderstorm: "wi-darksky-thunderstorm",
+    mist: "wi-darksky-fog",
+    fog: "wi-darksky-fog",
   };
 
   const weatherClass = iconMap[main.toLowerCase()];
