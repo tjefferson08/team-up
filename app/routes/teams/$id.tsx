@@ -61,7 +61,9 @@ function weatherIconForMain(main: string) {
     clear: "wi-darksky-clear-day",
     rain: "wi-darksky-rain",
     snow: "wi-darksky-snow",
-    thunderstorm: "before:content-['\\f00d']",
+    thunderstorm: "before:content-['\\ff01e']",
+    mist: "before:content-['\\f014']",
+    fog: "before:content-['\\f014']",
   };
 
   const weatherClass = iconMap[main.toLowerCase()];
