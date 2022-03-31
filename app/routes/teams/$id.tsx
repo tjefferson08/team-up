@@ -70,6 +70,7 @@ function weatherIconForMain(main: string) {
     thunderstorm: "wi-darksky-thunderstorm",
     mist: "wi-darksky-fog",
     fog: "wi-darksky-fog",
+    haze: "wi-wu-hazy",
   };
 
   const weatherClass = iconMap[main.toLowerCase()];
