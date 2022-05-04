@@ -50,6 +50,12 @@ export const action: ActionFunction = async ({ context, request, params }) => {
   const body = await request.formData();
 
   const kv = kvStorageFor(context.env)(`team::member::${params.id}`);
+
+  if (body.get("_method") === "delete") {
+    await kv.delete(String(body.get("member_id")));
+    return {};
+  }
+
   const geocodeResult = body.get("member_geocode_result");
   if (!geocodeResult) {
     return { error: "A member must have a location" };
@@ -94,6 +100,12 @@ export default function NewTeam() {
                 ) : (
                   <span className="italic">missing geo</span>
                 )}
+                <Form method="post">
+                  <input type="hidden" name="_method" value="delete" />
+                  <button type="submit" name="member_id" value={m.id}>
+                    Delete
+                  </button>
+                </Form>
               </div>
             </li>
           ))}
