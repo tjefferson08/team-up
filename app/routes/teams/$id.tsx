@@ -27,6 +27,7 @@ export const loader: LoaderFunction = async ({ context, params }) => {
   const team = await teamKv.get(params.id);
   const members = await memberKv.list();
 
+
   if (team) {
     return { team, members };
   } else {
@@ -52,6 +53,7 @@ export default function TeamDashboard() {
           {members.map((m: Member) => (
             <MemberItem key={m.id} member={m} team={team} />
           ))}
+          <MidpointItem team={team} />
         </ul>
       ) : (
         <div className="text-xl">No members yet</div>
@@ -98,6 +100,46 @@ function WeatherCard({ weather }: { weather: any }) {
   );
 }
 
+function MidpointItem({ team }: { team: Team }) {
+  const fetcher = useFetcher();
+  React.useEffect(() => {
+    if (fetcher.type === "init") {
+      fetcher.load(`/teams/${team.id}/midpoint_weather`);
+    }
+  }, [fetcher]);
+  //debugger;
+
+  return (
+    <li key={'midpoint-item'}>
+      {fetcher.data ? (
+        <Item member={fetcher.data} weather={fetcher.data.weather} />
+      ) : null}
+    </li>
+  )
+};
+
+function Item({ member, weather }: { member: Member, weather: any }) {
+  return (
+    <div className="mt-8 flex w-full flex-wrap overflow-x-scroll rounded-md bg-slate-200 p-4 shadow-md">
+      <div className="basis-2/5 font-bold">{member.name}</div>
+      <div className="basis-3/5 ">
+        <div className="flex flex-col items-center">
+          {member.geo ? (
+            <>
+              <div>
+                {member.geo.name}, {member.geo.state || member.geo.country}
+              </div>
+              <WeatherCard weather={weather} />
+            </>
+          ) : (
+            <span className="italic">missing geo</span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function MemberItem({ member, team }: { member: Member; team: Team }) {
   const fetcher = useFetcher();
   React.useEffect(() => {
@@ -108,24 +150,11 @@ function MemberItem({ member, team }: { member: Member; team: Team }) {
 
   return (
     <li key={member.id}>
-      <div className="mt-8 flex w-full flex-wrap overflow-x-scroll rounded-md bg-slate-200 p-4 shadow-md">
-        <div className="basis-2/5 font-bold">{member.name}</div>
-        <div className="basis-3/5 ">
-          <div className="flex flex-col items-center">
-            {member.geo ? (
-              <>
-                <div>
-                  {member.geo.name}, {member.geo.state || member.geo.country}
-                </div>
-                {fetcher.data ? (
-                  <WeatherCard weather={fetcher.data.weather} />
-                ) : null}
-              </>
-            ) : (
-              <span className="italic">missing geo</span>
-            )}
-          </div>
-        </div>
+      <div>
+        {fetcher.data ? (
+          <Item member={member} weather={fetcher.data.weather} />
+        ) : null}
+
         {fetcher.data ? (
           <details className="basis-full">
             <summary className="cursor-pointer">Full JSON</summary>
@@ -133,6 +162,6 @@ function MemberItem({ member, team }: { member: Member; team: Team }) {
           </details>
         ) : null}
       </div>
-    </li>
+    </li >
   );
 }
