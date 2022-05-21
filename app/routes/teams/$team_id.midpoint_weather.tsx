@@ -25,15 +25,6 @@ export const loader: LoaderFunction = async ({ context, params }) => {
   const reverseGeoURL = new URL(`
 http://api.openweathermap.org/geo/1.0/reverse?lat=${midpoint.lat}&lon=${midpoint.lon}&limit=1&appid=${context.env.OPEN_WEATHER_API_KEY}`);
 
-  const midpointGeoResponse = (await (
-    await fetch(reverseGeoURL.toString(), {
-      headers: { Accept: "application/json" },
-    })
-  ).json()) as any[];
-
-  const midpointGeo = midpointGeoResponse[0];
-  console.log("midpoint geo response: ", midpointGeoResponse[0]);
-
   const openWeatherURL = new URL(
     `https://api.openweathermap.org/data/2.5/weather`
   );
@@ -41,12 +32,14 @@ http://api.openweathermap.org/geo/1.0/reverse?lat=${midpoint.lat}&lon=${midpoint
   openWeatherURL.searchParams.set("lat", String(midpoint.lat));
   openWeatherURL.searchParams.set("lon", String(midpoint.lon));
   openWeatherURL.searchParams.set("appid", context.env.OPEN_WEATHER_API_KEY);
-  console.log("fetching", openWeatherURL.toString());
-  const weather = (await (
-    await fetch(openWeatherURL.toString(), {
-      headers: { Accept: "application/json" },
-    })
-  ).json()) as any[];
+
+  let [midpointGeo, weather] = await Promise.all([
+    fetch(reverseGeoURL.toString(), { headers: { Accept: "application/json" } }).then(response => response.json()),
+    fetch(openWeatherURL.toString(), { headers: { Accept: "application/json" } }).then(response => response.json())
+  ]);
+
+  // only asked for 1 result
+  midpointGeo = (midpointGeo as any[])[0];
 
   const fakeMember = {
     name: "Midpoint Mertle",

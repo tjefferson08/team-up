@@ -108,7 +108,7 @@ function MidpointItem({ team }: { team: Team }) {
   }, [fetcher]);
 
   return (
-    <li key={'midpoint-item'}>
+    <li key='midpoint-item'>
       {fetcher.data ? (
         <Item member={fetcher.data} weather={fetcher.data.weather} />
       ) : null}
