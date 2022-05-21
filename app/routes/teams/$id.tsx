@@ -27,7 +27,6 @@ export const loader: LoaderFunction = async ({ context, params }) => {
   const team = await teamKv.get(params.id);
   const members = await memberKv.list();
 
-
   if (team) {
     return { team, members };
   } else {
@@ -107,7 +106,6 @@ function MidpointItem({ team }: { team: Team }) {
       fetcher.load(`/teams/${team.id}/midpoint_weather`);
     }
   }, [fetcher]);
-  //debugger;
 
   return (
     <li key={'midpoint-item'}>
@@ -162,6 +160,6 @@ function MemberItem({ member, team }: { member: Member; team: Team }) {
           </details>
         ) : null}
       </div>
-    </li >
+    </li>
   );
 }

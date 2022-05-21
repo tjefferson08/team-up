@@ -48,7 +48,6 @@ http://api.openweathermap.org/geo/1.0/reverse?lat=${midpoint.lat}&lon=${midpoint
     })
   ).json()) as any[];
 
-
   const fakeMember = {
     name: "Midpoint Mertle",
     latitude: midpoint.lat,
